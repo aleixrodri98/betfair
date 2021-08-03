@@ -3,6 +3,7 @@ import ssl
 import logging
 import datetime
 import collections
+import socks
 from typing import Optional
 
 from ..exceptions import SocketError, ListenerError
@@ -193,7 +194,8 @@ class BetfairStream:
         """Creates ssl socket, connects to stream api and
         sets timeout.
         """
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = socks.socksocket(socket.AF_INET, socket.SOCK_STREAM)
+        s.set_proxy(socks.HTTP, "185.100.72.21", 8080)
         s = ssl.wrap_socket(s)
         s.settimeout(self.timeout)
         s.connect((self.host, self.__port))
